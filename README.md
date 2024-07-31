@@ -10,4 +10,4 @@ The Currency Exchanger website is a web application that allows users to exchang
 
 5. **Functionality**: When a user enters the currency codes and clicks the "Search" button, the website makes an HTTP request to the Alpha Vantage API with the entered currency codes. The API responds with the exchange rate information, which is then displayed on the website.
 
-Overall, the Currency Exchanger website is a combination of frontend technologies (HTML, CSS, JavaScript) for the user interface, and backend technologies (C#, ASP.NET) for server-side processing and API integration, allowing users to easily check currency exchange rates.
+Overall, the Currency Exchanger website is a combination of frontend technologies (HTML & CSS) for the user interface, and backend technologies (C#, ASP.NET) for server-side processing and API integration, allowing users to easily check currency exchange rates.
