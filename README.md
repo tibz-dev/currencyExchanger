@@ -1,6 +1,6 @@
 The Currency Exchanger website is a web application that allows users to exchange currency rates between two currencies. Here's an overview of how it is made and the languages used:
 
-1. **Frontend**: The frontend of the Currency Exchanger website is built using HTML, CSS, and JavaScript. HTML is used for structuring the webpage, CSS for styling it, and JavaScript for adding interactivity.
+1. **Frontend**: The frontend of the Currency Exchanger website is built using HTML & CSS. HTML is used for structuring the webpage, CSS for styling it.
 
 2. **Backend**: The backend of the website is built using C# and ASP.NET. C# is a programming language used for backend development, and ASP.NET is a web framework for building web applications with C#. In this case, ASP.NET Web Forms are used to handle user interactions and server-side processing.
 
