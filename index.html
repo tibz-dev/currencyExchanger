@@ -336,12 +336,16 @@
     async function loadCurrencies() {
       addCurrencyOptions(fallbackCurrencies);
       try {
-        const response = await fetch("https://api.frankfurter.app/currencies");
+        const response = await fetch("/api/currencies");
         if (!response.ok) throw new Error("Could not load currency list");
-        const currencies = await response.json();
+        const data = await response.json();
+        const currencies = data.currencies || fallbackCurrencies;
         addCurrencyOptions(currencies);
+        status.textContent = data.source === "Frankfurter"
+          ? "Currency list ready • live provider"
+          : "Currency list ready • built-in fallback";
       } catch {
-        status.textContent = "Currency list loaded from built-in fallback";
+        status.textContent = "Currency list ready • built-in fallback";
       }
     }
 
@@ -386,22 +390,29 @@
       result.innerHTML = '<span class="small">Fetching the latest available rate…</span><div class="value">···</div>';
 
       try {
-        const url = "https://api.frankfurter.app/latest?amount=" + encodeURIComponent(amount) +
+        const url = "/api/rate?amount=" + encodeURIComponent(amount) +
           "&from=" + encodeURIComponent(from) + "&to=" + encodeURIComponent(to);
         const response = await fetch(url);
-        if (!response.ok) throw new Error("Exchange-rate service returned an error.");
-
         const data = await response.json();
-        const converted = data.rates && data.rates[to];
-        if (typeof converted !== "number") throw new Error("No rate is available for this currency pair.");
 
-        const unitRate = amount === 0 ? 0 : converted / amount;
+        if (!response.ok) {
+          throw new Error(data.error || "Exchange-rate service returned an error.");
+        }
+
+        const converted = Number(data.converted);
+        const unitRate = Number(data.rate);
+
+        if (!Number.isFinite(converted) || !Number.isFinite(unitRate)) {
+          throw new Error("No rate is available for this currency pair.");
+        }
+
+        const dateLabel = data.date ? ' • Updated: ' + data.date : '';
         result.innerHTML =
           '<span class="small">' + formatMoney(amount, from) + ' equals</span>' +
           '<div class="value">' + formatMoney(converted, to) + '</div>' +
           '<span class="rate">1 ' + from + ' = ' + unitRate.toLocaleString(undefined, { maximumFractionDigits: 6 }) +
-          ' ' + to + (data.date ? ' • Rate date: ' + data.date : '') + '</span>';
-        status.textContent = data.date ? "Reference rate date: " + data.date : "Latest available reference rate";
+          ' ' + to + dateLabel + '</span>';
+        status.textContent = "Rates online • " + (data.provider || "live provider");
       } catch (error) {
         showError("We couldn't retrieve the exchange rate right now. Check your connection and try again.");
       } finally {
